@@ -1,0 +1,33 @@
+# Budgets (in characters, approx 3.5-4 chars per token for code) used by data/compaction.py.
+# The final token cut is done by laya.common.build_sequence; these keep the *important* parts
+# inside the window rather than letting the tail be truncated blindly.
+
+# Rough total state budget for max_len 2048 / head_max_len 320 -> ~1,700 state tokens.
+state_char_budget: 6000
+
+code_review:
+  task_chars: 1200          # issue / instruction text
+  diff_chars: 3600          # unified diff, hunk-aware truncation
+  tests_chars: 700          # test output tail (failures first)
+  notes_chars: 300
+  max_files_listed: 12
+  context_lines_per_hunk: 2 # unchanged context lines kept around changed lines
+
+tool_call:
+  request_chars: 1200
+  tools_chars: 2600         # compacted tool schemas: name, one-line description, params
+  calls_chars: 1600         # proposed calls as compact JSON
+  history_chars: 500
+  max_tools: 19
+  max_param_desc_chars: 60
+
+agent_trace:
+  task_chars: 800
+  constraints_chars: 500
+  summary_chars: 1200
+  steps_chars: 2000
+  max_recent_steps: 8
+
+routing:
+  request_chars: 2500
+  context_chars: 1500

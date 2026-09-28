@@ -1,0 +1,39 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.eggs/
+build/
+dist/
+.venv/
+venv/
+.pytest_cache/
+.mypy_cache/
+
+# Secrets / environment
+.env
+*.token
+
+# Data artifacts (built on RunPod, pushed to the Hub; never committed)
+artifacts/
+data/cache/
+data/out/
+*.jsonl
+*.parquet
+*.pt
+*.safetensors
+
+# Checkpoints / outputs
+outputs/
+checkpoints/
+wandb/
+runs/
+
+# HF cache
+.cache/
+
+# Editors
+.idea/
+.vscode/
+*.swp
+.DS_Store
