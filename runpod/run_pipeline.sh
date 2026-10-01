@@ -72,7 +72,9 @@ stage_preprocess() {
 stage_train() {
   echo "== RLCD profile=$TRAIN_PROFILE -> $RUN"
   # one GPU by default; set NPROC=2 (or more) on a multi-gpu pod
-  torchrun --standalone --nproc_per_node="${NPROC:-1}" train/train_rlcd.py \
+  # The image torchrun is /usr/local/bin/torchrun and launches system Python, which
+  # cannot import the venv's laya. Use the active interpreter instead.
+  python -m torch.distributed.run --standalone --nproc_per_node="${NPROC:-1}" train/train_rlcd.py \
     --items "$ITEMS/items_train.pt" --out "$RUN" --profile "$TRAIN_PROFILE" ${WANDB:+--wandb}
 }
 

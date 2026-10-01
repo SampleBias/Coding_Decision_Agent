@@ -18,6 +18,7 @@ import argparse
 import json
 import os
 import shutil
+import tempfile
 
 REPO = Path(__file__).resolve().parents[1]
 CARD = REPO / "huggingface" / "README.md"
@@ -73,10 +74,9 @@ def main():
     api.create_repo(args.repo, repo_type="model", exist_ok=True, private=args.private)
     report = json.loads(args.report.read_text()) if args.report and args.report.exists() else None
     card = render_card(CARD.read_text(), report)
-    staging = args.checkpoint / "_hub"
-    if staging.exists():
-        shutil.rmtree(staging)
-    staging.mkdir()
+    # Stage off the checkpoint directory. Network volumes often reject chmod/utime,
+    # and shutil.copy2 then fails while copying the weights.
+    staging = Path(tempfile.mkdtemp(prefix="cda_hub_"))
     for name in need:
         src = args.checkpoint / name
         dst = staging / name
