@@ -6,3 +6,5 @@ if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
 if str(ROOT / "sdk") not in sys.path:
     sys.path.insert(0, str(ROOT / "sdk"))
+if str(ROOT / "suite") not in sys.path:
+    sys.path.insert(0, str(ROOT / "suite"))

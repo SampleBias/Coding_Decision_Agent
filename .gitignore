@@ -37,3 +37,8 @@ runs/
 .vscode/
 *.swp
 .DS_Store
+
+# Terminal test suite build and session logs
+suite/cda-tui/target/
+suite/sessions/*
+!suite/sessions/.gitignore

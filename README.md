@@ -58,6 +58,7 @@ train/            train_rlcd.py, calibrate.py, evaluate.py, batching.py
 publish/          push_to_hub.py
 huggingface/      README.md          the Hub model card, not this file
 sdk/              coding_decision_agent package + examples
+suite/            terminal test suite: Python sidecar + Rust TUI
 runpod/           setup.sh, serve_teacher.sh, run_pipeline.sh
 docs/             00_STATUS.md, 01_RUNPOD_TRAINING.md
 tests/            CPU tests (pytest). No GPU required.
@@ -73,6 +74,29 @@ pytest
 ```
 
 This machine has no NVIDIA GPU. Do not start `run_pipeline.sh` here.
+
+## Test suite
+
+The TUI in `suite/cda-tui` never loads weights. A Python sidecar grades each case, and `g` runs Laya-CDA and Jev on the same questions. Cyan is Laya-CDA. Magenta is Jev. Study (press `4`) is the scoreboard, and the line at the bottom of that panel says which model was more accurate.
+
+Mock mode is the default. It replays scripted labels and checks the harness. It does not download a model.
+
+```bash
+python3 suite/sidecar/server.py
+cargo run --manifest-path suite/cda-tui/Cargo.toml
+```
+
+Set `OPENROUTER_API_KEY` before starting the sidecar to include Jev (`~typesafe/jev-latest` on the OpenRouter Decisions API). `JEV_MODEL` overrides that id. Without the key, Laya-CDA still grades and the header reads `Jev off`.
+
+After the checkpoint is published, point the sidecar at it:
+
+```bash
+python3 suite/sidecar/server.py --backend real --checkpoint S4MPL3BI4S/Coding_Decision_Agent
+```
+
+`cargo run --manifest-path suite/cda-tui/Cargo.toml -- --check` grades the catalog and prints the report. With the Jev key set, that check calls the Decisions API and spends OpenRouter credit.
+
+`?` lists the keys. `b` / `v` hide and reveal grades, `t` cycles the gate threshold, and `e` writes a session log under `suite/sessions/`.
 
 ## License
 
